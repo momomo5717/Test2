@@ -1,0 +1,120 @@
+* emms-player-mpv-radiko
+
+** What is it?
+
+   emms-player-mpv-radiko is an extension of EMMS ( [[https://www.gnu.org/software/emms/][The Emacs Multimedia System]] )
+   for playing  超!A&G, らじる★らじる, and Radiko
+   which are internet radio services in Japan.
+
+   A motivation is to play the services from Emacs,
+   but it can be also used for multimedia files, etc
+   by [[#playing-multimedia-files-etc][redefining emms-player-mpv-radiko]] which is defined in emms-player-mpv-radiko.el.
+
+   [[file:./image/screenshot.png]]
+
+** Requirements
+
+   + EMMS ( [[https://www.gnu.org/software/emms/]] )
+   + ffmpeg (recommended the build with –enable-librtmp)
+   + mpv 0.7 or later (recommended) or mplayer
+   + For Radiko
+     + wget
+     + swfextract (swftools)
+     + rtmpdump
+   + youtube-dl (option)
+     
+   Tested with GNU Emaccs 24.4 (emacs-mac-app @5.3_0) , rtmpdump @2.4_1, ffmpeg @2.5.4_0+librtmp,
+   MPlayer @1.1_8, mpv @0.7.1_2 .
+
+** Setup
+
+**** For mplayer
+
+    #+BEGIN_SRC emacs-lisp
+      (add-to-list 'load-path "/path/to/emms-player-mpv-radiko")
+      (require 'emms-player-mplayer-radiko)
+      (add-to-list 'emms-player-list 'emms-player-mplayer-radiko)
+    #+END_SRC
+
+**** For mpv
+
+    #+BEGIN_SRC emacs-lisp
+      (add-to-list 'load-path "/path/to/emms-player-mpv-radiko")
+      (require 'emms-player-mpv-radiko)
+      (add-to-list 'emms-player-list 'emms-player-mpv-radiko)
+    #+END_SRC
+
+** Usage
+
+**** Playing 超!A&G, らじる★らじる and Radiko
+
+    See [[README.jp.org]]
+
+**** Playing multimedia files, etc
+
+    =emms-palyer-mpv-radiko= can be used for multimedia files, etc by redefining as follows.
+
+    #+BEGIN_SRC emacs-lisp
+      (define-emms-simple-player mpv-radiko '(streamlist file url playlist)
+          (concat "\\`\\(http\\|https\\|radiko\\|mms\\|rtmp\\)://\\|"
+                  (apply #'emms-player-simple-regexp emms-player-base-format-list))
+          "mpv" "--no-terminal")
+    #+END_SRC
+
+    =emms-player-mpv-radiko-specific-source-alist= is used for a specific track-name.
+
+    =emms-palyer-mpv-radiko= can use the following functions defined in EMMS while playing.
+
+    + emms-pause
+    + emms-seek-forward
+    + emms-seek-backward
+    + emms-seek-to
+    + emms-volume-raise
+    + emms-volume-lower
+    + emms-volume-minor-mode
+
+    =emms-palyer-mpv-radiko= can also use the following functions while playing.
+
+    + emms-player-mpv-radiko-volume-set
+    + emms-player-mpv-radiko-mute
+    + emms-player-mpv-radiko-seek-to-%
+    + emms-player-mpv-radiko-playlist-next
+    + emms-player-mpv-radiko-playlist-prev
+    + emms-palyer-mpv-radiko-time-pos-message
+    + emms-palyer-mpv-radiko-percent-pos-message
+
+    =emms-player-mpv-radiko-tq-enqueue= supports defining a function
+    to control mpv as follows.
+
+    #+BEGIN_SRC emacs-lisp
+      (defun emms-player-mpv-radiko-fullscreen ()
+        (interactive)
+        (emms-player-mpv-radiko-tq-enqueue
+         '("cycle" "fullscreen")
+         nil
+         (emms-player-mpv-radiko-tq-error-message "mpv cycle fullscreen : %s")))
+
+      (defun emms-player-mpv-radiko-playlist-pos ()
+        (interactive)
+        (emms-player-mpv-radiko-tq-enqueue
+         '("get_property" "playlist-pos")
+         nil
+         (emms-player-mpv-radiko-tq-data-message "mpv playlist position : %s")))
+    #+END_SRC
+
+    =emms-player-mpv-radiko-parameters= is used as opitons for mpv.
+
+    #+BEGIN_SRC emacs-lisp
+      ;; For example, no video, no audio display
+      (add-to-list 'emms-player-mpv-radiko-parameters "--no-video")
+      (add-to-list 'emms-player-mpv-radiko-parameters "--audio-display=no")
+    #+END_SRC
+
+** References
+
+   + How to play Radiko
+     + rec_radiko.sh ( [[https://gist.github.com/saiten/875864]] )
+   + How to control mpv from Emacs
+     + emms-player-mpv.el ( https://github.com/dochang/emms-player-mpv ) 
+     + mpv.el ( [[https://github.com/kljohann/mpv.el]] )
+
