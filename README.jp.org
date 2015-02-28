@@ -1,0 +1,253 @@
+* emms-player-mpv-radiko
+
+** What is it?
+
+   EMMS ( [[https://www.gnu.org/software/emms/][The Emacs Multimedia System]] ) の emms-stream-mode から外部プレイヤーを呼び， 超!A&G+，らじる★らじる，
+   Radiko を再生するための拡張パッケージです．
+   EMMS は外部プレイヤー依存を前提にして書かれているので，好みのメディアプレイヤーを追加することができます．
+
+   このパッケージで定義されている emms-player-mplayer-radiko または emms-player-mpv-radiko を
+   emms-player-list に追加して使用することができます．
+   また [[#emms-playlist-mode-でも使用するための設定例][emms-palyer-mpv-radiko は 再定義する]] ことで mpv が再生できる音楽・動画ファイルなどに対しても使用することができます．
+
+   [[file:./image/screenshot.png]]
+
+** Requirements
+
+   + EMMS ( [[https://www.gnu.org/software/emms/]] )
+   + wget (for Radiko)
+   + swfextract (swftools) (for Radiko)
+   + rtmpdump (for Radiko)
+   + ffmpeg (recommended the build with –enable-librtmp)
+   + mpv 0.7 or later (recommended) or mplayer
+   + youtube-dl (option)
+
+   GNU Emaccs 24.4 (emacs-mac-app @5.3_0) , rtmpdump @2.4_1, ffmpeg @2.5.4_0+librtmp,
+   MPlayer @1.1_8, mpv @0.7.1_2 で動作確認を行いました．
+
+** Setup
+
+**** For mplayer
+
+    #+BEGIN_SRC emacs-lisp
+      (add-to-list 'load-path "/path/to/emms-player-mpv-radiko")
+      (require 'emms-player-mplayer-radiko)
+      (add-to-list 'emms-player-list 'emms-player-mplayer-radiko)
+    #+END_SRC
+
+**** For mpv
+
+    #+BEGIN_SRC emacs-lisp
+      (add-to-list 'load-path "/path/to/emms-player-mpv-radiko")
+      (require 'emms-player-mpv-radiko)
+      (add-to-list 'emms-player-list 'emms-player-mpv-radiko)
+    #+END_SRC
+
+** Usage
+
+**** ストリームリストへの追加
+
+   再生するためには emms-stream-mode のストリームリストに各局の情報を追加する必要があります．
+   emms-radiko-stream-list.el を使用してストリームリストに追加できます．
+
+   超!A&G+，らじる★らじる，Radiko のストリームリストを追加するには
+   以下のリストを評価します．
+
+   #+BEGIN_SRC emacs-lisp
+     ;; 念のために ~/.emacs.d/emms/streams のバックアップを取ってください．
+     (require 'emms-radiko-stream-list)
+     (emms-radiko-stream-add-bookmark-and-save
+        emms-radiko-stream-list-agqr
+        (emms-radiko-get-rajiru-stream-list 'tokyo)
+        (emms-radiko-wget-current-area-radiko-stream-list))
+   #+END_SRC
+
+   =emms-radiko-stream-add-bookmark-and-save= は
+   =emms-stream-default-list= または =emms-stream-bookmarks-file=
+   から読み込まれたストリームリストに追加し， =emms-stream-bookmarks-file=
+   へ保存します．リストの順番などは =emms-stream-bookmarks-file= に保存されているファイルを
+   編集することで変更できます．デフォルトでは =~/.emacs.d/emms/streams= になっています．
+
+**** 再生方法の設定
+
+    Radiko の再生方法を
+    =emms-radiko-start-mplayer-simple-process-function= または
+    =emms-radiko-start-mpv-simple-process-function= で設定できます．
+
+    Radiko再生時，デフォルトで mplayer は rtmpdump からパイプ して再生します．
+    mpv の方は 直接 mpv を呼んで再生します(こちらの方が安定して再生できます)．
+
+    mplayer, mpv ともに rtmpdump を パイプ した再生の方が起動が速いです．
+    ただし， 一時停止機能が使えません．
+    また環境によると思いますが，メモリを解放するために purge コマンドを実行した後，再生が復帰しない現象が起こりました．
+
+    rtmpdump をパイプして mpv で安定して再生できる場合は以下の設定で切り換えられます．
+
+    #+BEGIN_SRC emacs-lisp
+      (custom-set-variables
+       '(emms-radiko-start-mpv-simple-process-function
+         #'emms-radiko-start-simple-process-rtmpdump))
+    #+END_SRC
+
+**** 用意されている再生方法
+
+     環境によっては再生が不安定であったり，上手く再生できない場合があります．
+
+     + emms-radiko-start-simple-process
+
+       + "rtmpe://..." の形で渡して再生します．
+       + 基本的に mpv 用です．
+       + emms-player-mpv-radiko のデフォルト設定です．
+
+     + emms-radiko-start-simple-process-rtmpdump
+
+       + rtmpdump をパイプして再生します．mplayer は slave mode での再生はできません．
+       + emms-player-mplayer-radiko のデフォルト設定です．
+
+     + emms-radiko-start-simple-process-rtmpdump-while
+
+       + rtmpdump をパイプして再生します．mplayer は slave mode での再生はできません．
+       + 再生が途切れて落ちた場合に接続し直します．
+       + 基本的に mplayer 用です．
+
+     + emms-radiko-start-simple-process-ffmpeg
+
+       + "ffmpeg://rtmpe://..." の形で渡して再生します．
+
+     + emms-radiko-start-simple-process-ffmpeg-while
+
+       + "ffmpeg://rtmpe://..." の形で渡して再生します．
+       + 再生が途切れて落ちた場合に接続し直します．
+       + 基本的に mplayer 用です．
+
+**** 再生オプションの設定
+
+   再生起動時に，mplayer は =emms-player-mplayer-radiko-parameters= を，
+   mpv は =emms-player-mpv-radiko-parameters= をオプションとして使用します．
+   変更する場合には以下のように追加または削除します．
+
+   #+BEGIN_SRC emacs-lisp
+     ;; mpv の  --no-video オプションを追加する
+     (add-to-list 'emms-player-mpv-radiko-parameters "--no-video")
+     ;; --no-video を削除する
+     (setq  emms-player-mpv-radiko-parameters
+            (delete "--no-video" emms-player-mpv-radiko-parameters))
+   #+END_SRC
+
+**** emms-stream-mode の設定例
+
+   好みによりますが， =*EMMS Streams*= バッファ上で操作するための設定例です．
+
+   #+BEGIN_SRC emacs-lisp
+     (require 'emms-streams)
+
+     (custom-set-variables
+      '(emms-stream-default-action "play"))
+
+     (defun emms-stream-add-to-playlist ()
+       (interactive)
+       (let ((emms-stream-default-action "add"))
+         (emms-stream-play)))
+
+     (dolist (keypair `((,(kbd "S-<return>") emms-stream-add-to-playlist)
+                        (,(kbd "<return>")   emms-stream-play)
+                        (,(kbd "s")          emms-stop)
+                        (,(kbd "SPC")        emms-pause)
+                        (,(kbd "+")          emms-volume-raise)
+                        (,(kbd "-")          emms-volume-lower)
+                        (,(kbd "k")          emms-stream-previous-line)
+                        (,(kbd "j")          emms-stream-next-line)
+                        (,(kbd "l")          forward-char)
+                        (,(kbd "h")          backward-char)
+                        (,(kbd "S")          emms-stream-save-bookmarks-file)))
+       (apply #'define-key emms-stream-mode-map keypair))
+
+     (defun my-emms-mode-line-playlist-current ()
+       (format emms-mode-line-format
+               (file-name-nondirectory
+                (case (emms-track-type (emms-playlist-current-selected-track))
+                  (streamlist
+                   (emms-stream-name
+                    (emms-track-get (emms-playlist-current-selected-track)
+                                    'metadata)))
+                  (t (emms-track-description
+                      (emms-playlist-current-selected-track)))))))
+
+     (custom-set-variables
+      '(emms-mode-line-mode-line-function #'my-emms-mode-line-playlist-current))
+
+     ;; view-mode の キーマップと衝突する場合
+     (defadvice emms-streams (after view-mode-disable activate)
+       (view-mode 0))
+   #+END_SRC
+
+   =M-x emms-streams= で =*EMMS Streams*= バッファを開き， =<return>= で再生できます．
+
+**** emms-player-mpv-radiko 使用時に使うことができる関数
+
+    上記の emms-stream-mode の設定例 に載っている関数以外に以下の関数を使用することができます．
+
+    + emms-player-mpv-radiko-mute
+    + emms-player-mpv-radiko-volume-set
+    + emms-player-mpv-seek (Radiko 再生時には使用できません)
+
+**** emms-playlist-mode でも使用するための設定例
+
+    emms-palyer-mpv-radikoは以下のように再定義することで， mpv が再生できる任意のプロトコル，拡張子に対しても使用することができます．
+
+    #+BEGIN_SRC emacs-lisp
+      (define-emms-simple-player mpv-radiko '(streamlist file url playlist)
+          (concat "\\`\\(http\\|https\\|radiko\\|mms\\|rtmp\\)://\\|"
+                  (apply #'emms-player-simple-regexp emms-player-base-format-list))
+          "mpv" "--no-terminal")
+    #+END_SRC
+
+    =emms-player-mpv-radiko-specific-source-alist= を設定することで youtube などの特定の track-name
+    に対応することができます．
+
+    emms-palyer-mpv-radiko は再生時に以下の EMMS で定義されている関数を使うことができます．
+
+    + emms-pause
+    + emms-seek-forward
+    + emms-seek-backward
+    + emms-seek-to
+    + emms-volume-raise
+    + emms-volume-lower
+    + emms-volume-minor-mode
+
+    EMMS で定義されている関数以外に以下のものを使うことができます．
+
+    + emms-player-mpv-radiko-volume-set
+    + emms-player-mpv-radiko-mute
+    + emms-player-mpv-radiko-seek-to-%
+    + emms-player-mpv-radiko-playlist-next
+    + emms-player-mpv-radiko-playlist-prev
+    + emms-palyer-mpv-radiko-time-pos-message
+    + emms-palyer-mpv-radiko-percent-pos-message
+
+    =emms-player-mpv-radiko-tq-enqueue= を使い， 以下のように mpv を操作するコマンドを定義することができます．
+
+    #+BEGIN_SRC emacs-lisp
+      (defun emms-player-mpv-radiko-fullscreen ()
+        (interactive)
+        (emms-player-mpv-radiko-tq-enqueue
+         '("cycle" "fullscreen")
+         nil
+         (emms-player-mpv-radiko-tq-error-message "mpv cycle fullscreen : %s")))
+
+      (defun emms-player-mpv-radiko-playlist-pos ()
+        (interactive)
+        (emms-player-mpv-radiko-tq-enqueue
+         '("get_property" "playlist-pos")
+         nil
+         (emms-player-mpv-radiko-tq-data-message "mpv playlist position : %s")))
+    #+END_SRC
+
+** References
+
+   + Radikoの再生方法
+     + rec_radiko.sh ( [[https://gist.github.com/saiten/875864]] )
+   + mpv の操作方法
+     + emms-player-mpv.el ( https://github.com/dochang/emms-player-mpv ) 
+     + mpv.el ( [[https://github.com/kljohann/mpv.el]] )
+
