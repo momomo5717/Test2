@@ -218,7 +218,7 @@ FORMAT must have a format specification to insert error message."
 
 (defun emms-player-mpv-radiko--convert-specific-source (track-name track-type)
   (cl-loop for ((regexp type) . fn) in emms-player-mpv-radiko-specific-source-alist
-           when (and (or (eq t type) (eq track-type))
+           when (and (or (eq t type) (eq track-type type))
                      (string-match-p regexp track-name))
            return (funcall fn track-name)))
 
