@@ -2,7 +2,7 @@
 
 ;; Copyright (C) 2015 momomo5717
 
-;; Version 0.1.0
+;; Version 0.1.1
 ;; URL: https://github.com/momomo5717/emms-player-mpv-radiko
 
 
@@ -218,7 +218,7 @@ FORMAT must have a format specification to insert error message."
 
 (defun emms-player-mpv-radiko--convert-specific-source (track-name track-type)
   (cl-loop for ((regexp type) . fn) in emms-player-mpv-radiko-specific-source-alist
-           when (and (or (eq t type) (eq track-type))
+           when (and (or (eq t type) (eq track-type type))
                      (string-match-p regexp track-name))
            return (funcall fn track-name)))
 
@@ -499,6 +499,21 @@ Defined in define-emms-simple-player macro."
   "Playlist prev for mpv."
   (interactive)
   (emms-player-mpv-radiko--playlist-change-helper "prev"))
+
+(defun emms-player-mpv-radiko-ontop ()
+  "Cycle ontop for mpv."
+  (interactive)
+  (emms-player-mpv-radiko-tq-clear)
+  (emms-player-mpv-radiko-tq-enqueue
+   '("cycle" "ontop")
+   nil
+   (lambda (_ ans-ls)
+     (if (emms-player-mpv-radiko-tq-successp ans-ls)
+         (emms-player-mpv-radiko-tq-enqueue
+          '("get_property_string" "ontop")
+          nil
+          (emms-player-mpv-radiko-tq-data-message "mpv ontop : %s"))
+       (message "mpv ontop : error")))))
 
 ;; Reset control when emms-player-mpv-radiko starts.
 (defun emms-player-mpv-radiko--set-default-volume-function ()
