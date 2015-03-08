@@ -500,6 +500,21 @@ Defined in define-emms-simple-player macro."
   (interactive)
   (emms-player-mpv-radiko--playlist-change-helper "prev"))
 
+(defun emms-player-mpv-radiko-ontop ()
+  "Cycle ontop for mpv."
+  (interactive)
+  (emms-player-mpv-radiko-tq-clear)
+  (emms-player-mpv-radiko-tq-enqueue
+   '("cycle" "ontop")
+   nil
+   (lambda (_ ans-ls)
+     (if (emms-player-mpv-radiko-tq-successp ans-ls)
+         (emms-player-mpv-radiko-tq-enqueue
+          '("get_property_string" "ontop")
+          nil
+          (emms-player-mpv-radiko-tq-data-message "mpv ontop : %s"))
+       (message "mpv ontop : error")))))
+
 ;; Reset control when emms-player-mpv-radiko starts.
 (defun emms-player-mpv-radiko--set-default-volume-function ()
   "Reset volume control in emms-player-stopped-hook or emms-player-finished-hook."
