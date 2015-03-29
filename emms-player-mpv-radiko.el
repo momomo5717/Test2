@@ -47,7 +47,9 @@
   "\\`\\(radiko\\|mms\\|rtmp\\)://\\|"
   "mpv" "--no-terminal")
 
-(defvar emms-player-mpv-radiko--socket nil)
+(defvar emms-player-mpv-radiko--socket
+  (make-temp-name
+    (expand-file-name "mpv-radiko-socket" temporary-file-directory)))
 
 (defun emms-player-mpv-radiko--socket ()
   (setq emms-player-mpv-radiko--socket
@@ -65,7 +67,7 @@
               :service emms-player-mpv-radiko--socket)))
 
 (defvar emms-player-mpv-radiko--tq-event-buffer
-  "*emms-player-mpv-radiko--tq-event*"
+  " *emms-player-mpv-radiko--tq-event*"
   "Buffer for event from mpv.")
 
 (defun emms-player-mpv-radiko--tq-close ()
@@ -129,9 +131,8 @@
                       unless obj return (nreverse ls)
                       when obj do (push obj ls))))
      (cl-loop for ans in ans-ls
-              for event-pair = (assoc 'event ans)
-              for event      = (cdr event-pair)
-              when event-pair do
+              for event = (assoc-default 'event ans)
+              when event do
               (cond
                ((equal event "pause")
                 (setq emms-player-paused-p t)
@@ -214,7 +215,7 @@ FORMAT must have a format specification to insert error message."
      (lambda (track-name) (format "--ytdl %s"
                               (shell-quote-argument track-name)))))
   "Alist to convert track-name to readable mpv format.
-(((regexp track-type) . function) ...)")
+\(\(\(regexp track-type\) . function\) ... \)")
 
 (defun emms-player-mpv-radiko--convert-specific-source (track-name track-type)
   (cl-loop for ((regexp type) . fn) in emms-player-mpv-radiko-specific-source-alist
@@ -238,6 +239,7 @@ FORMAT must have a format specification to insert error message."
 (defadvice emms-player-mpv-radiko-start (around override activate)
   "Override emms-player-mpv-radiko-start
 Defined in define-emms-simple-player macro."
+  (emms-player-mpv-radiko--tq-close)
   (let* ((track (ad-get-arg 0))
          (socket (emms-player-mpv-radiko--socket))
          (input-socket (format "--input-unix-socket=%s" socket))
