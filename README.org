@@ -6,8 +6,8 @@
    for playing  超!A&G, らじる★らじる, and Radiko
    which are internet radio services in Japan.
 
-   A motivation is to play the services from Emacs,
-   but it can be also used for multimedia files, etc
+   A motivation is to play the services from Emacs.
+   It can be also used for multimedia files, etc
    by [[#playing-multimedia-files-etc][redefining emms-player-mpv-radiko]] which is defined in emms-player-mpv-radiko.el.
 
    [[file:./image/screenshot.png]]
@@ -82,6 +82,7 @@
     + emms-player-mpv-radiko-playlist-prev
     + emms-palyer-mpv-radiko-time-pos-message
     + emms-palyer-mpv-radiko-percent-pos-message
+    + emms-player-mpv-radiko-ontop
 
     =emms-player-mpv-radiko-tq-enqueue= supports defining a function
     to control mpv as follows.

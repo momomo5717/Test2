@@ -224,6 +224,7 @@
     + emms-player-mpv-radiko-playlist-prev
     + emms-palyer-mpv-radiko-time-pos-message
     + emms-palyer-mpv-radiko-percent-pos-message
+    + emms-player-mpv-radiko-ontop
 
     =emms-player-mpv-radiko-tq-enqueue= を使い， 以下のように mpv を操作するコマンドを定義することができます．
 
