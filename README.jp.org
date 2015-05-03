@@ -8,7 +8,7 @@
 
    このパッケージで定義されている emms-player-mplayer-radiko または emms-player-mpv-radiko を
    emms-player-list に追加して使用することができます．
-   また [[#emms-playlist-mode-でも使用するための設定例][emms-player-mpv-radiko は 再定義する] ことで mpv が再生できる音楽・動画ファイルなどに対しても使用することができます．
+   また [[#emms-playlist-mode-でも使用するための設定例][emms-player-mpv-radiko は 再定義する]] ことで mpv が再生できる音楽・動画ファイルなどに対しても使用することができます．
 
    [[file:./image/screenshot.png]]
 

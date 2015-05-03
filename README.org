@@ -1,5 +1,13 @@
 * emms-player-mpv-radiko
 
+** Warning : This is no longer maintained. 
+
+   The following repositories are enabled.
+
+   + [[https://github.com/momomo5717/emms-player-simple-mpv][emms-player-simple-mpv]]
+   + [[https://github.com/momomo5717/emms-player-mpv-jp-radios][emms-player-mpv-jp-radios]]
+
+
 ** What is it?
 
    emms-player-mpv-radiko is an extension of EMMS ( [[https://www.gnu.org/software/emms/][The Emacs Multimedia System]] )
