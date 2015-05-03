@@ -316,7 +316,7 @@ Defined in define-emms-simple-player macro."
          (message "mpv volume : %s" v)
        (message "mpv volume : error")))))
 
-(defun emms-palyer-mpv-radiko-time-pos-message ()
+(defun emms-player-mpv-radiko-time-pos-message ()
   "Get time pos in current file for mpv."
   (interactive)
   (emms-player-mpv-radiko-tq-enqueue
@@ -331,7 +331,7 @@ Defined in define-emms-simple-player macro."
            (message "mpv time position : %02d:%02d:%02d" h m s))
        (message "mpv time position : error")))))
 
-(defun emms-palyer-mpv-radiko-percent-pos-message ()
+(defun emms-player-mpv-radiko-percent-pos-message ()
   "Get percent pos in current file for mpv."
   (interactive)
   (emms-player-mpv-radiko-tq-enqueue

@@ -52,7 +52,7 @@
 
 **** Playing multimedia files, etc
 
-    =emms-palyer-mpv-radiko= can be used for multimedia files, etc by redefining as follows.
+    =emms-player-mpv-radiko= can be used for multimedia files, etc by redefining as follows.
 
     #+BEGIN_SRC emacs-lisp
       (define-emms-simple-player mpv-radiko '(streamlist file url playlist)
@@ -63,7 +63,7 @@
 
     =emms-player-mpv-radiko-specific-source-alist= is used for a specific track-name.
 
-    =emms-palyer-mpv-radiko= can use the following functions defined in EMMS while playing.
+    =emms-player-mpv-radiko= can use the following functions defined in EMMS while playing.
 
     + emms-pause
     + emms-seek-forward
@@ -73,15 +73,15 @@
     + emms-volume-lower
     + emms-volume-minor-mode
 
-    =emms-palyer-mpv-radiko= can also use the following functions while playing.
+    =emms-player-mpv-radiko= can also use the following functions while playing.
 
     + emms-player-mpv-radiko-volume-set
     + emms-player-mpv-radiko-mute
     + emms-player-mpv-radiko-seek-to-%
     + emms-player-mpv-radiko-playlist-next
     + emms-player-mpv-radiko-playlist-prev
-    + emms-palyer-mpv-radiko-time-pos-message
-    + emms-palyer-mpv-radiko-percent-pos-message
+    + emms-player-mpv-radiko-time-pos-message
+    + emms-player-mpv-radiko-percent-pos-message
     + emms-player-mpv-radiko-ontop
 
     =emms-player-mpv-radiko-tq-enqueue= supports defining a function
