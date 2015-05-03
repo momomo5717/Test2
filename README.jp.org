@@ -8,7 +8,7 @@
 
    このパッケージで定義されている emms-player-mplayer-radiko または emms-player-mpv-radiko を
    emms-player-list に追加して使用することができます．
-   また [[#emms-playlist-mode-でも使用するための設定例][emms-palyer-mpv-radiko は 再定義する]] ことで mpv が再生できる音楽・動画ファイルなどに対しても使用することができます．
+   また [[#emms-playlist-mode-でも使用するための設定例][emms-player-mpv-radiko は 再定義する]] ことで mpv が再生できる音楽・動画ファイルなどに対しても使用することができます．
 
    [[file:./image/screenshot.png]]
 
@@ -193,7 +193,7 @@
 
 **** emms-playlist-mode でも使用するための設定例
 
-    emms-palyer-mpv-radikoは以下のように再定義することで， mpv が再生できる任意のプロトコル，拡張子に対しても使用することができます．
+    emms-player-mpv-radikoは以下のように再定義することで， mpv が再生できる任意のプロトコル，拡張子に対しても使用することができます．
 
     #+BEGIN_SRC emacs-lisp
       (define-emms-simple-player mpv-radiko '(streamlist file url playlist)
@@ -205,7 +205,7 @@
     =emms-player-mpv-radiko-specific-source-alist= を設定することで youtube などの特定の track-name
     に対応することができます．
 
-    emms-palyer-mpv-radiko は再生時に以下の EMMS で定義されている関数を使うことができます．
+    emms-player-mpv-radiko は再生時に以下の EMMS で定義されている関数を使うことができます．
 
     + emms-pause
     + emms-seek-forward
@@ -222,8 +222,8 @@
     + emms-player-mpv-radiko-seek-to-%
     + emms-player-mpv-radiko-playlist-next
     + emms-player-mpv-radiko-playlist-prev
-    + emms-palyer-mpv-radiko-time-pos-message
-    + emms-palyer-mpv-radiko-percent-pos-message
+    + emms-player-mpv-radiko-time-pos-message
+    + emms-player-mpv-radiko-percent-pos-message
     + emms-player-mpv-radiko-ontop
 
     =emms-player-mpv-radiko-tq-enqueue= を使い， 以下のように mpv を操作するコマンドを定義することができます．
