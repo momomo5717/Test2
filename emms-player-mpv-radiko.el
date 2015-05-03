@@ -2,7 +2,7 @@
 
 ;; Copyright (C) 2015 momomo5717
 
-;; Version 0.1.2
+;; Version 0.1.3
 ;; URL: https://github.com/momomo5717/emms-player-mpv-radiko
 
 
