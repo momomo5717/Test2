@@ -1,12 +1,11 @@
 * emms-player-mpv-radiko
 
-** Warning : This is no longer maintained. 
+** Warning : This is no longer maintained.
 
-   The following repositories are enabled.
+   The improved packages are available from the following link:
 
-   + [[https://github.com/momomo5717/emms-player-simple-mpv][emms-player-simple-mpv]]
-   + [[https://github.com/momomo5717/emms-player-mpv-jp-radios][emms-player-mpv-jp-radios]]
-
+   + [[https://github.com/momomo5717/emms-player-simple-mpv][emms-player-simple-mpv]] ( [[http://melpa.org/#/emms-player-simple-mpv][file:http://melpa.org/packages/emms-player-simple-mpv-badge.svg]] [[http://stable.melpa.org/#/emms-player-simple-mpv][file:http://stable.melpa.org/packages/emms-player-simple-mpv-badge.svg]] )
+   + [[https://github.com/momomo5717/emms-player-mpv-jp-radios][emms-player-mpv-jp-radios]] ( [[http://melpa.org/#/emms-player-mpv-jp-radios][file:http://melpa.org/packages/emms-player-mpv-jp-radios-badge.svg]] )
 
 ** What is it?
 
@@ -30,7 +29,7 @@
      + swfextract (swftools)
      + rtmpdump
    + youtube-dl (option)
-     
+
    Tested with GNU Emaccs 24.4 (emacs-mac-app @5.3_0) , rtmpdump @2.4_1, ffmpeg @2.5.4_0+librtmp,
    MPlayer @1.1_8, mpv @0.7.1_2 .
 
@@ -124,6 +123,5 @@
    + How to play Radiko
      + rec_radiko.sh ( [[https://gist.github.com/saiten/875864]] )
    + How to control mpv from Emacs
-     + emms-player-mpv.el ( https://github.com/dochang/emms-player-mpv ) 
+     + emms-player-mpv.el ( https://github.com/dochang/emms-player-mpv )
      + mpv.el ( [[https://github.com/kljohann/mpv.el]] )
-
